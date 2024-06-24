@@ -36,9 +36,9 @@ class _HomePageState extends State<HomePage> {
             options: MapOptions(
               // focus Nha Trang
               initialCenter: const LatLng(12.2388, 109.1967),
-              initialZoom: 13,
+              initialZoom: 14,
               cameraConstraint: CameraConstraint.contain(
-                // focus Nha Trang 
+                // focus Nha Trang
                 bounds: LatLngBounds(
                   const LatLng(12.1888, 109.1467),
                   const LatLng(12.2888, 109.2467),
@@ -62,6 +62,27 @@ class _HomePageState extends State<HomePage> {
                     'This attribution is the same throughout this app, except '
                     'where otherwise specified',
                     prependCopyright: false,
+                  ),
+                ],
+              ),
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: const LatLng(12.242049,109.187772),
+                    width: 70,
+                    height: 70,
+                    child: Image.asset(
+                      'assets/marker_location.png',
+
+                    ),
+                  ),    Marker(
+                    point: const LatLng(12.230290,109.164099),
+                    width: 70,
+                    height: 70,
+                    child: Image.asset(
+                      'assets/marker_location.png',
+
+                    ),
                   ),
                 ],
               ),
