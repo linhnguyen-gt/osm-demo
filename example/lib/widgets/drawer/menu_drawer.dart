@@ -53,11 +53,11 @@ class MenuDrawer extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'flutter_map Demo',
+                  'OSM Demo',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Text(
-                  '© flutter_map Authors & Contributors',
+                  '© OSM Authors & Contributors',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14),
                 ),

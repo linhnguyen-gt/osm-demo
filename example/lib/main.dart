@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'flutter_map Demo',
+      title: 'OSM Demo',
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: const Color(0xFF8dea88),
