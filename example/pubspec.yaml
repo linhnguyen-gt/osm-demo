@@ -70,5 +70,16 @@ flutter:
     - assets/map/anholt_osmbright/14/8726/
     - assets/map/anholt_osmbright/14/8727/
     - assets/map/epsg3413/amsr2.png
+    - assets/type_car/vf.png
+    - assets/type_car/testla_model_s.png
+    - assets/type_car/kia_soul_ev.png
+    - assets/type_car/honda_e.png
+    - assets/type_car/hyundai_kona_electric.png
+    - assets/type_car/mg_zs_ev.png
+    - assets/type_car/nissan_leaf.png
+    - assets/type_car/peugeot_e208.png
+    - assets/type_car/polestar_2.png
+    - assets/type_car/tesla_model_3.png
+    - assets/type_car/volkswagen_id3.png
     - assets/mapbox-logo-white.png
     - assets/
