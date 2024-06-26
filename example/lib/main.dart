@@ -23,6 +23,7 @@ import 'package:flutter_map_example/pages/polygon.dart';
 import 'package:flutter_map_example/pages/polygon_perf_stress.dart';
 import 'package:flutter_map_example/pages/polyline.dart';
 import 'package:flutter_map_example/pages/polyline_perf_stress.dart';
+import 'package:flutter_map_example/pages/profile_screen.dart';
 import 'package:flutter_map_example/pages/reset_tile_layer.dart';
 import 'package:flutter_map_example/pages/retina.dart';
 import 'package:flutter_map_example/pages/scalebar.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
       home: const Login(),
       routes: <String, WidgetBuilder>{
         HomePage.route: (context) => const HomePage(),
+        ProfileScreen.route: (context) => const ProfileScreen(),
         CancellableTileProviderPage.route: (context) =>
             const CancellableTileProviderPage(),
         PolylinePage.route: (context) => const PolylinePage(),

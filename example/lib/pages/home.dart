@@ -51,7 +51,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchData() async {
     final token = MyLogin.instance.token;
-    print('dasdasdasd $token');
     final data = await fetchData(token);
     setState(() {
       _data = data;
