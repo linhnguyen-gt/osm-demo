@@ -18,7 +18,7 @@ Future<List<dynamic>> fetchData() async {
   final url = Uri.parse('http://pinkapp.lol/api/v1/vehicle/list');
   final headers = {
     'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJyb2xlIjoxMCwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcxOTI5MTcyMywiZXhwIjoxNzUwODQ5MzIzfQ.1Gsy-ojeHJn8Mfo2GZTFKcFbtj6ClK1aognp88o4Fwo'
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJyb2xlIjoxMCwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcxOTM3NTMyOCwiZXhwIjoxNzUwOTMyOTI4fQ.LsRp8kiGPogklbwSULGKsiHsq5qp9ug7DS43Tx92e1g'
   };
 
   final response = await http.get(url, headers: headers);
@@ -32,7 +32,7 @@ Future<List<dynamic>> fetchData() async {
 }
 
 class HomePage extends StatefulWidget {
-  static const String route = '/';
+  static const String route = '/home';
 
   const HomePage({super.key});
 
