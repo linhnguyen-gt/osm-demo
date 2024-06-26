@@ -62,7 +62,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           children: [
             const SizedBox(
               height: 30,
@@ -95,13 +95,13 @@ class _LoginState extends State<Login> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
+                          borderSide: const BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(20)),
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
+                          borderSide: const BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(20)),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
+                          borderSide: const BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(20)),
                     ),
                     validator: (value) {
