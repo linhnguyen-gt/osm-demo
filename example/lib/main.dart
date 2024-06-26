@@ -11,6 +11,7 @@ import 'package:flutter_map_example/pages/fallback_url_page.dart';
 import 'package:flutter_map_example/pages/home.dart';
 import 'package:flutter_map_example/pages/interactive_test_page.dart';
 import 'package:flutter_map_example/pages/latlng_to_screen_point.dart';
+import 'package:flutter_map_example/pages/login.dart';
 import 'package:flutter_map_example/pages/many_circles.dart';
 import 'package:flutter_map_example/pages/many_markers.dart';
 import 'package:flutter_map_example/pages/map_controller.dart';
@@ -49,8 +50,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: const Color(0xFF8dea88),
       ),
-      home: const HomePage(),
+      home: const Login(),
       routes: <String, WidgetBuilder>{
+        HomePage.route: (context) => const HomePage(),
         CancellableTileProviderPage.route: (context) =>
             const CancellableTileProviderPage(),
         PolylinePage.route: (context) => const PolylinePage(),

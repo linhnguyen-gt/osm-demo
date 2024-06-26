@@ -14,12 +14,11 @@ import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future<List<dynamic>> fetchData() async {
+import '../plugins/my_login.dart';
+
+Future<List<dynamic>> fetchData(String token) async {
   final url = Uri.parse('http://pinkapp.lol/api/v1/vehicle/list');
-  final headers = {
-    'Authorization':
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJyb2xlIjoxMCwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcxOTI5MTcyMywiZXhwIjoxNzUwODQ5MzIzfQ.1Gsy-ojeHJn8Mfo2GZTFKcFbtj6ClK1aognp88o4Fwo'
-  };
+  final headers = {'Authorization': 'Bearer $token'};
 
   final response = await http.get(url, headers: headers);
   if (response.statusCode == 200) {
@@ -32,7 +31,7 @@ Future<List<dynamic>> fetchData() async {
 }
 
 class HomePage extends StatefulWidget {
-  static const String route = '/';
+  static const String route = '/home';
 
   const HomePage({super.key});
 
@@ -51,7 +50,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchData() async {
-    final data = await fetchData();
+    final token = MyLogin.instance.token;
+    print('dasdasdasd $token');
+    final data = await fetchData(token);
     setState(() {
       _data = data;
     });
