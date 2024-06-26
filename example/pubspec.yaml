@@ -13,6 +13,7 @@ dependencies:
   flutter_map:
   flutter_map_cancellable_tile_provider: ^3.0.0
   flutter_map_geojson: ^1.0.8
+  flutter_svg: ^2.0.10+1
   http: ^1.2.1
   latlong2: ^0.9.1
   proj4dart: ^2.1.0

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -6,9 +8,28 @@ import 'package:flutter_map_example/misc/tile_providers.dart';
 import 'package:flutter_map_example/widgets/drawer/floating_menu_button.dart';
 import 'package:flutter_map_example/widgets/drawer/menu_drawer.dart';
 import 'package:flutter_map_example/widgets/first_start_dialog.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+Future<List<dynamic>> fetchData() async {
+  final url = Uri.parse('http://pinkapp.lol/api/v1/vehicle/list');
+  final headers = {
+    'Authorization':
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJyb2xlIjoxMCwiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSIsImlhdCI6MTcxOTI5MTcyMywiZXhwIjoxNzUwODQ5MzIzfQ.1Gsy-ojeHJn8Mfo2GZTFKcFbtj6ClK1aognp88o4Fwo'
+  };
+
+  final response = await http.get(url, headers: headers);
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    final metadata = jsonData['metadata'] as List<dynamic>;
+    return metadata;
+  } else {
+    return [];
+  }
+}
 
 class HomePage extends StatefulWidget {
   static const String route = '/';
@@ -20,10 +41,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<dynamic>? _data = [];
+
   @override
   void initState() {
     super.initState();
     showIntroDialogIfNeeded();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    final data = await fetchData();
+    setState(() {
+      _data = data;
+    });
   }
 
   @override
@@ -68,22 +99,36 @@ class _HomePageState extends State<HomePage> {
               MarkerLayer(
                 markers: [
                   Marker(
-                    point: const LatLng(12.242049,109.187772),
+                    point: const LatLng(12.242049, 109.187772),
                     width: 70,
                     height: 70,
                     child: Image.asset(
                       'assets/marker_location.png',
-
-                    ),
-                  ),    Marker(
-                    point: const LatLng(12.230290,109.164099),
-                    width: 70,
-                    height: 70,
-                    child: Image.asset(
-                      'assets/marker_location.png',
-
                     ),
                   ),
+                  Marker(
+                    point: const LatLng(12.230290, 109.164099),
+                    width: 70,
+                    height: 70,
+                    child: Image.asset(
+                      'assets/marker_location.png',
+                    ),
+                  ),
+                  if (_data != null)
+                    ..._data!.map((item) {
+                      final double latitude = item['latitude'] as double;
+                      final double longitude = item['longitude'] as double;
+                      return Marker(
+                        point: LatLng(latitude, longitude),
+                        width: 40,
+                        height: 40,
+                        child: SvgPicture.asset(
+                          'assets/ic_car.svg',
+                          colorFilter: const ColorFilter.mode(
+                              Colors.green, BlendMode.srcIn),
+                        ),
+                      );
+                    }),
                 ],
               ),
             ],
