@@ -59,6 +59,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       drawer: const MenuDrawer(HomePage.route),
       body: Stack(
@@ -116,18 +117,120 @@ class _HomePageState extends State<HomePage> {
                   ),
                   if (_data != null)
                     ..._data!.map((item) {
-                      final double latitude = item['latitude'] as double;
-                      final double longitude = item['longitude'] as double;
+                      MaterialColor calculateIconColor(int status) {
+                        switch (status) {
+                          case 2:
+                            return Colors.green;
+                          case 3:
+                            return Colors.yellow;
+                          case 4:
+                            return Colors.red;
+                          default:
+                            return Colors.grey;
+                        }
+                      }
+
+                      String assetTypeCar(int type) {
+                        switch (type) {
+                          case 0:
+                            return 'assets/type_car/vf.png';
+                          case 1:
+                            return 'assets/type_car/testla_model_s.png';
+                          case 2:
+                            return 'assets/type_car/kia_soul_ev.png';
+                          case 3:
+                            return 'assets/type_car/mg_zs_ev.png';
+                          case 4:
+                            return 'assets/type_car/volkswagen_id3.png';
+                          case 4:
+                            return 'assets/type_car/hyundai_kona_electric.png';
+                          case 4:
+                            return 'assets/type_car/honda_e.png';
+                          case 4:
+                            return 'assets/type_car/nissan_leaf.png';
+                          case 4:
+                            return 'assets/type_car/peugeot_e208.png';
+                          case 4:
+                            return 'assets/type_car/polestar_2.png';
+                          default:
+                            return 'assets/type_car/tesla_model_3.png';
+                        }
+                      }
+
+                      final double latitude = item['latitude'] is double
+                          ? item['latitude'] as double
+                          : 0.0;
+                      final double longitude = item['longitude'] is double
+                          ? item['longitude'] as double
+                          : 0.0;
+                      final String customerName = (item['customer_name'] != null) ? item['customer_name'] as String : 'No Name';
+                      final int unitPrice = (item['unit_price'] != null) ? item['unit_price'] as int : 0;
                       return Marker(
-                        point: LatLng(latitude, longitude),
-                        width: 40,
-                        height: 40,
-                        child: SvgPicture.asset(
-                          'assets/ic_car.svg',
-                          colorFilter: const ColorFilter.mode(
-                              Colors.green, BlendMode.srcIn),
-                        ),
-                      );
+                          point: LatLng(latitude, longitude),
+                          width: 40,
+                          height: 40,
+                          child: InkWell(
+                            onTap: () {
+                              showModalBottomSheet<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    height: 400,
+                                    width: screenWidth,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 30),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          customerName,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 26),
+                                        ),
+                                        Image.asset(
+                                            assetTypeCar(
+                                                item['vehicle_type'] as int),
+                                            height: 200),
+                                        Text(
+                                          'Pin: ${item['battery_status']}%',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                        Text(
+                                          'Unit Price: $unitPrice',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Stack(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/ic_car.svg',
+                                  colorFilter: ColorFilter.mode(
+                                      calculateIconColor(item['status'] as int),
+                                      BlendMode.srcIn),
+                                ),
+                                Visibility(
+                                  visible: item['battery_status'] as int <= 10,
+                                  child: const Align(
+                                    alignment: Alignment.topRight,
+                                    child: Icon(
+                                      Icons.report_problem,
+                                      color: Colors.red,
+                                      size: 20,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ));
                     }),
                 ],
               ),
