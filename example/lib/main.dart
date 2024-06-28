@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: const Color(0xFF8dea88),
       ),
-      home: const ProfileScreen(),
+      home: const Login(),
       routes: <String, WidgetBuilder>{
         Login.route: (context) => const Login(),
         HomePage.route: (context) => const HomePage(),
