@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(const Duration(seconds: 2),
+    Future.delayed(const Duration(seconds: 3),
         () => Navigator.pushReplacementNamed(context, Login.route));
   }
 
@@ -28,13 +28,28 @@ class _SplashScreenState extends State<SplashScreen> {
               alignment: Alignment.center,
               width: MediaQuery.of(context).size.width,
               color: const Color(0xFF1D272F),
-              child: const Text(
-                'OSM \n FOR USER',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30),
-                textAlign: TextAlign.center,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'OSM',
+                    style: TextStyle(
+                        color: Color(0xFFFD683D),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10,),
+                  Text(
+                    'FOR USER',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ))),
     ]));
   }
