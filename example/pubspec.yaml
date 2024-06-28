@@ -82,6 +82,11 @@ flutter:
     - assets/type_car/polestar_2.png
     - assets/type_car/tesla_model_3.png
     - assets/type_car/volkswagen_id3.png
+    - assets/bottom_navigator/ic_home.svg
+    - assets/bottom_navigator/ic_list_order.svg
+    - assets/bottom_navigator/ic_profile.svg
+    - assets/bottom_navigator/ic_message.svg
+    - assets/bottom_navigator/ic_map.svg
     - assets/ic_success.svg
     - assets/ic_energy.svg
     - assets/mapbox-logo-white.png

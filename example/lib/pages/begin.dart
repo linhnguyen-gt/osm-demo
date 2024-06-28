@@ -59,12 +59,17 @@ class BeginPage extends StatefulWidget {
 }
 
 class _BeginState extends State<BeginPage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showIntroduce(context);
-    });
   }
 
   @override
@@ -78,17 +83,83 @@ class _BeginState extends State<BeginPage> {
         decoration: const BoxDecoration(
             image: DecorationImage(image: imageBg, fit: BoxFit.cover)),
       )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showIntroduce(context);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: SvgPicture.asset(
-            'assets/ic_detail.svg',
-            // colorFilter: const ColorFilter.mode(Colors.orange, BlendMode.srcIn),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.black,
+        items: [
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/bottom_navigator/ic_home.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset('assets/bottom_navigator/ic_home.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+            label: 'Home',
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/bottom_navigator/ic_list_order.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset(
+                'assets/bottom_navigator/ic_list_order.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+            label: 'My Order',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/bottom_navigator/ic_map.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset(
+                'assets/bottom_navigator/ic_map.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/bottom_navigator/ic_message.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset(
+                'assets/bottom_navigator/ic_message.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+            label: 'Messages',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset('assets/bottom_navigator/ic_profile.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
+            activeIcon: SvgPicture.asset(
+                'assets/bottom_navigator/ic_profile.svg',
+                width: 26,
+                height: 26,
+                colorFilter:
+                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
