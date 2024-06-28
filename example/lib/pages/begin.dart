@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map_example/pages/home.dart';
 import 'package:flutter_map_example/pages/login.dart';
+import 'package:flutter_map_example/pages/profile_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
 Future<void> showIntroduce(BuildContext context) {
@@ -85,7 +86,7 @@ class _BeginState extends State<BeginPage> {
       loadedPages.contains(1) ? const Login() : Container(),
       loadedPages.contains(2) ? const HomePage() : Container(),
       loadedPages.contains(3) ? const Login() : Container(),
-      loadedPages.contains(4) ? const Login() : Container(),
+      loadedPages.contains(4) ? const ProfileScreen() : Container(),
     ];
 
     return Scaffold(

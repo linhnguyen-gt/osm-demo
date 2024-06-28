@@ -50,70 +50,98 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      drawer: const MenuDrawer(EditProfile.route),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+      appBar: AppBar(title: const Text('Edit Profile')),
+      body: Column(
         children: [
-          Column(
-            children: [
-              CircleAvatar(
-                radius: MediaQuery.of(context).size.width * 0.2,
-                backgroundImage: _data?['avatar'] != null
-                    ? NetworkImage(_data?['avatar'] as String)
-                    : null,
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(16),
+              children: [
+                Column(
                   children: [
+                    CircleAvatar(
+                      radius: MediaQuery.of(context).size.width * 0.2,
+                      backgroundImage: _data?['avatar'] != null
+                          ? NetworkImage(_data?['avatar'] as String)
+                          : null,
+                    ),
                     const SizedBox(
-                      width: 70,
-                      child: Text(
-                        'Name',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 70,
+                            child: Text(
+                              'Name',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Text('${_data?['fullname'] ?? ''}')
+                        ],
                       ),
                     ),
-                    Text('${_data?['fullname'] ?? ''}')
-                  ],
-                ),
-              ),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  children: [
-                    const SizedBox(
-                      width: 70,
-                      child: Text(
-                        'Email',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 70,
+                            child: Text(
+                              'Email',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Text('${_data?['email'] ?? ''}')
+                        ],
                       ),
                     ),
-                    Text('${_data?['email'] ?? ''}')
-                  ],
-                ),
-              ),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  children: [
-                    const SizedBox(
-                      width: 70,
-                      child: Text(
-                        'Address',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 70,
+                            child: Text(
+                              'Address',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Text('${_data?['address'] ?? ''}')
+                        ],
                       ),
                     ),
-                    Text('${_data?['address'] ?? ''}')
+
                   ],
                 ),
-              ),
-            ],
+
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: InkWell(
+              child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFFD683D),
+                      borderRadius: BorderRadius.circular(30)),
+                  child: Center(
+                      child: const Text(
+                        'Save Changes',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: 20),
+                      ))),
+            ),
+          ),
+          SizedBox(
+            height: 20,
           )
         ],
       ),
