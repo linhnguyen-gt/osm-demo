@@ -13,6 +13,7 @@ import 'package:flutter_map_example/widgets/first_start_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -267,9 +268,19 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  static const _startedId = 'AnimatedMapController#MoveStarted';
+  static const _inProgressId = 'AnimatedMapController#MoveInProgress';
+  static const _finishedId = 'AnimatedMapController#MoveFinished';
+  Location _locationController = new Location();
+
+  bool _mapCentered = false;
+  StreamSubscription<LocationData>? _locationSubscription;
+
   List<dynamic>? _data = [];
   List<dynamic>? _dataPoint = [];
+
+  LatLng? _currentP = null;
   Timer? timer;
 
   @override
@@ -281,6 +292,9 @@ class _HomePageState extends State<HomePage> {
     timer = Timer.periodic(const Duration(seconds: 15), (Timer t) {
       _fetchData();
     });
+    getLocationUpdates().then(
+      (_) => {},
+    );
   }
 
   Future<void> _fetchData() async {
@@ -299,6 +313,100 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _animatedMapMove(LatLng destLocation, double destZoom) {
+    // Create some tweens. These serve to split up the transition from one location to another.
+    // In our case, we want to split the transition be<tween> our current map center and the destination.
+    final camera = mapController.camera;
+    final latTween = Tween<double>(
+        begin: camera.center.latitude, end: destLocation.latitude);
+    final lngTween = Tween<double>(
+        begin: camera.center.longitude, end: destLocation.longitude);
+    final zoomTween = Tween<double>(begin: camera.zoom, end: destZoom);
+
+    // Create a animation controller that has a duration and a TickerProvider.
+    final controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    // The animation determines what path the animation will take. You can try different Curves values, although I found
+    // fastOutSlowIn to be my favorite.
+    final Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    // Note this method of encoding the target destination is a workaround.
+    // When proper animated movement is supported (see #1263) we should be able
+    // to detect an appropriate animated movement event which contains the
+    // target zoom/center.
+    final startIdWithTarget =
+        '$_startedId#${destLocation.latitude},${destLocation.longitude},$destZoom';
+    bool hasTriggeredMove = false;
+
+    controller.addListener(() {
+      final String id;
+      if (animation.value == 1.0) {
+        id = _finishedId;
+      } else if (!hasTriggeredMove) {
+        id = startIdWithTarget;
+      } else {
+        id = _inProgressId;
+      }
+
+      hasTriggeredMove |= mapController.move(
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+        id: id,
+      );
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+
+    controller.forward();
+  }
+
+  Future<void> getLocationUpdates() async {
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await _locationController.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _locationController.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await _locationController.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await _locationController.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationSubscription = _locationController.onLocationChanged
+        .listen((LocationData currentLocation) {
+      if (!_mapCentered &&
+          currentLocation.latitude != null &&
+          currentLocation.longitude != null) {
+        _animatedMapMove(
+            LatLng(currentLocation.latitude!, currentLocation.longitude!), 15);
+        setState(() {
+          _currentP =
+              LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          _mapCentered = true;
+        });
+        _locationSubscription?.cancel();
+        _locationSubscription = null;
+      }
+    });
+  }
+
+  final mapController = MapController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -306,9 +414,10 @@ class _HomePageState extends State<HomePage> {
       body: Stack(
         children: [
           FlutterMap(
+            mapController: mapController,
             options: MapOptions(
               // focus Nha Trang
-              initialCenter: const LatLng(12.2388, 109.1967),
+              initialCenter: _currentP ?? const LatLng(12.1888, 109.1467),
               initialZoom: 14,
               cameraConstraint: CameraConstraint.contain(
                 // focus Nha Trang
@@ -340,6 +449,15 @@ class _HomePageState extends State<HomePage> {
               ),
               MarkerLayer(
                 markers: [
+                  if (_currentP != null)
+                    Marker(
+                      point: LatLng(_currentP!.latitude, _currentP!.longitude),
+                      width: 70,
+                      height: 70,
+                      child: Image.asset(
+                        'assets/marker_location.png',
+                      ),
+                    ),
                   if (_dataPoint != null)
                     ..._dataPoint!.map((item) {
                       final double latitude = item['latitude'] is double

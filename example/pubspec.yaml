@@ -16,6 +16,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   http: ^1.2.1
   latlong2: ^0.9.1
+  location: ^6.0.2
   proj4dart: ^2.1.0
   shared_preferences: ^2.2.3
   url_launcher: ^6.3.0
@@ -84,4 +85,5 @@ flutter:
     - assets/ic_success.svg
     - assets/ic_energy.svg
     - assets/mapbox-logo-white.png
+    - assets/marker_location.png
     - assets/
