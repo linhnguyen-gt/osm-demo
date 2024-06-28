@@ -86,4 +86,6 @@ flutter:
     - assets/ic_energy.svg
     - assets/mapbox-logo-white.png
     - assets/marker_location.png
+    - assets/background_nt.png
+    - assets/ic_detail.svg
     - assets/
