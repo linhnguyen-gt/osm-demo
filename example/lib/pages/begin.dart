@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map_example/pages/home.dart';
+import 'package:flutter_map_example/pages/login.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'home.dart';
 
 Future<void> showIntroduce(BuildContext context) {
   final double screenWidth = MediaQuery.of(context).size.width;
@@ -60,10 +60,16 @@ class BeginPage extends StatefulWidget {
 
 class _BeginState extends State<BeginPage> {
   int _selectedIndex = 0;
+  List<int> loadedPages = [0];
 
   void _onItemTapped(int index) {
+    final pages = loadedPages;
+    if (!pages.contains(index)) {
+      pages.add(index);
+    }
     setState(() {
       _selectedIndex = index;
+      loadedPages = pages;
     });
   }
 
@@ -74,15 +80,19 @@ class _BeginState extends State<BeginPage> {
 
   @override
   Widget build(BuildContext context) {
-    const imageBg = AssetImage('assets/background_nt.png');
+    final screens = [
+      const HomePage(),
+      loadedPages.contains(1) ? const Login() : Container(),
+      loadedPages.contains(2) ? const HomePage() : Container(),
+      loadedPages.contains(3) ? const Login() : Container(),
+      loadedPages.contains(4) ? const Login() : Container(),
+    ];
 
-    precacheImage(imageBg, context);
     return Scaffold(
-      body: SafeArea(
-          child: Container(
-        decoration: const BoxDecoration(
-            image: DecorationImage(image: imageBg, fit: BoxFit.cover)),
-      )),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         unselectedItemColor: Colors.grey,
@@ -121,8 +131,7 @@ class _BeginState extends State<BeginPage> {
                 height: 26,
                 colorFilter:
                     const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
-            activeIcon: SvgPicture.asset(
-                'assets/bottom_navigator/ic_map.svg',
+            activeIcon: SvgPicture.asset('assets/bottom_navigator/ic_map.svg',
                 width: 26,
                 height: 26,
                 colorFilter:
