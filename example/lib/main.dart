@@ -6,6 +6,7 @@ import 'package:flutter_map_example/pages/cancellable_tile_provider.dart';
 import 'package:flutter_map_example/pages/circle.dart';
 import 'package:flutter_map_example/pages/custom_crs/custom_crs.dart';
 import 'package:flutter_map_example/pages/debouncing_tile_update_transformer.dart';
+import 'package:flutter_map_example/pages/edit_profile.dart';
 import 'package:flutter_map_example/pages/epsg3413_crs.dart';
 import 'package:flutter_map_example/pages/epsg4326_crs.dart';
 import 'package:flutter_map_example/pages/fallback_url_page.dart';
@@ -31,6 +32,7 @@ import 'package:flutter_map_example/pages/scalebar.dart';
 import 'package:flutter_map_example/pages/screen_point_to_latlng.dart';
 import 'package:flutter_map_example/pages/secondary_tap.dart';
 import 'package:flutter_map_example/pages/sliding_map.dart';
+import 'package:flutter_map_example/pages/splash_screen.dart';
 import 'package:flutter_map_example/pages/tile_builder.dart';
 import 'package:flutter_map_example/pages/tile_loading_error_handle.dart';
 import 'package:flutter_map_example/pages/wms_tile_layer.dart';
@@ -52,11 +54,13 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: const Color(0xFF8dea88),
       ),
-      home: const Login(),
+      home: const SplashScreen(),
       routes: <String, WidgetBuilder>{
+        Login.route: (context) => const Login(),
         HomePage.route: (context) => const HomePage(),
-        BeginPage.route: (context) => const BeginPage(),
         ProfileScreen.route: (context) => const ProfileScreen(),
+        BeginPage.route: (context) => const BeginPage(),
+        EditProfile.route: (context) => const EditProfile(),
         CancellableTileProviderPage.route: (context) =>
             const CancellableTileProviderPage(),
         PolylinePage.route: (context) => const PolylinePage(),
