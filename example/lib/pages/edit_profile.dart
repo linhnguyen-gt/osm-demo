@@ -7,7 +7,7 @@ import '../plugins/my_login.dart';
 import '../widgets/drawer/menu_drawer.dart';
 
 Future<dynamic> fetchData(String token) async {
-  final url = Uri.parse('http://pinkapp.lol/api/v1/user/profile');
+  final url = Uri.parse('http://103.82.195.138:3105/api/v1/user/profile');
   final headers = {'Authorization': 'Bearer $token'};
 
   final response = await http.get(url, headers: headers);
