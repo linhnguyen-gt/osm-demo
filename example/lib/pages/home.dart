@@ -18,7 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<List<dynamic>> fetchData(String token) async {
-  final url = Uri.parse('http://pinkapp.lol/api/v1/vehicle/list');
+  final url = Uri.parse('http://103.82.195.138:3105/api/v1/vehicle/list');
   final headers = {'Authorization': 'Bearer $token'};
 
   final response = await http.get(url, headers: headers);
@@ -32,7 +32,7 @@ Future<List<dynamic>> fetchData(String token) async {
 }
 
 Future<List<dynamic>> fetchDataPoint(String token) async {
-  final url = Uri.parse('http://pinkapp.lol/api/v1/point/user');
+  final url = Uri.parse('http://103.82.195.138:3105/api/v1/point/user');
   final headers = {'Authorization': 'Bearer $token'};
 
   final response = await http.get(url, headers: headers);
