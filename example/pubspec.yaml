@@ -87,6 +87,18 @@ flutter:
     - assets/bottom_navigator/ic_profile.svg
     - assets/bottom_navigator/ic_message.svg
     - assets/bottom_navigator/ic_map.svg
+    - assets/home/bg_home.png
+    - assets/home/ic_notice.svg
+    - assets/home/ic_add.svg
+    - assets/home/ic_search.svg
+    - assets/home/ic_scan.svg
+    - assets/home/ic_check_rate.svg
+    - assets/home/ic_nearby_drop.svg
+    - assets/home/ic_others.svg
+    - assets/home/ic_help.svg
+    - assets/home/ic_wallet.svg
+    - assets/home/ic_order.svg
+    - assets/home/ic_package.svg
     - assets/ic_success.svg
     - assets/ic_energy.svg
     - assets/mapbox-logo-white.png

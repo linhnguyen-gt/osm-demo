@@ -1,54 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map_example/pages/home.dart';
+import 'package:flutter_map_example/pages/home_2.dart';
 import 'package:flutter_map_example/pages/login.dart';
 import 'package:flutter_map_example/pages/profile_screen.dart';
 import 'package:flutter_svg/svg.dart';
-
-Future<void> showIntroduce(BuildContext context) {
-  final double screenWidth = MediaQuery.of(context).size.width;
-  return showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 360,
-          width: screenWidth,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-          color: Colors.white30,
-          child: Column(
-            children: [
-              const Text(
-                'Mang lại sự tiện lợi khi đến thành phố Nha Trang',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Text(
-                  'Mang lại sự tiện lợi khi đến thành phố Nha Trang, Mang lại sự tiện lợi khi đến thành phố Nha Trang, Mang lại sự tiện lợi khi đến thành phố Nha Trang.',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.pushReplacementNamed(context, HomePage.route);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 0, 167, 111),
-                  minimumSize: Size(screenWidth, 60),
-                ),
-                child: const Text(
-                  'Nhấn để bắt đầu',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        );
-      });
-}
 
 class BeginPage extends StatefulWidget {
   static const String route = '/begin';
@@ -82,11 +37,9 @@ class _BeginState extends State<BeginPage> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      const HomePage(),
-      loadedPages.contains(1) ? const Login() : Container(),
-      loadedPages.contains(2) ? const HomePage() : Container(),
-      loadedPages.contains(3) ? const Login() : Container(),
-      loadedPages.contains(4) ? const ProfileScreen() : Container(),
+      const Home2Page(),
+      loadedPages.contains(1) ? const HomePage() : Container(),
+      loadedPages.contains(2) ? const ProfileScreen() : Container(),
     ];
 
     return Scaffold(
@@ -113,20 +66,6 @@ class _BeginState extends State<BeginPage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/bottom_navigator/ic_list_order.svg',
-                width: 26,
-                height: 26,
-                colorFilter:
-                    const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
-            activeIcon: SvgPicture.asset(
-                'assets/bottom_navigator/ic_list_order.svg',
-                width: 26,
-                height: 26,
-                colorFilter:
-                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
-            label: 'My Order',
-          ),
-          BottomNavigationBarItem(
             icon: SvgPicture.asset('assets/bottom_navigator/ic_map.svg',
                 width: 26,
                 height: 26,
@@ -138,20 +77,6 @@ class _BeginState extends State<BeginPage> {
                 colorFilter:
                     const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
             label: 'Map',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/bottom_navigator/ic_message.svg',
-                width: 26,
-                height: 26,
-                colorFilter:
-                    const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
-            activeIcon: SvgPicture.asset(
-                'assets/bottom_navigator/ic_message.svg',
-                width: 26,
-                height: 26,
-                colorFilter:
-                    const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
-            label: 'Messages',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset('assets/bottom_navigator/ic_profile.svg',
