@@ -2,10 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map_example/pages/begin.dart';
-import 'package:flutter_map_example/pages/home.dart';
+import 'package:flutter_map_example/plugins/my_login.dart';
 import 'package:http/http.dart' as http;
-
-import '../plugins/my_login.dart';
 
 Future<dynamic> login({required String email, required String password}) async {
   final url = Uri.parse('http://pinkapp.lol/api/v1/auth/login');
