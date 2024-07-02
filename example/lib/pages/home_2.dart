@@ -184,6 +184,7 @@ class _Home2State extends State<Home2Page> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 22),
                   child: GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -243,6 +244,7 @@ class _Home2State extends State<Home2Page> {
                   padding:
                       const EdgeInsets.only(left: 22, right: 22, bottom: 20),
                   child: ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: listService.length,
                       itemBuilder: (BuildContext context, int index) {

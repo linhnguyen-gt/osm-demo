@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map_example/pages/home.dart';
 import 'package:flutter_map_example/pages/home_2.dart';
-import 'package:flutter_map_example/pages/login.dart';
 import 'package:flutter_map_example/pages/profile_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
