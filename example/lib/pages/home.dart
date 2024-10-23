@@ -654,7 +654,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ..._gates.map((gate) => ListTile(
                           title: Text(gate['name'] as String),
                           subtitle: Text(
-                              'Open: ${DateFormat.Hm().format(gate['openTime'] as DateTime)} - Close: ${DateFormat.Hm().format(gate['closeTime'] as DateTime)}'),
+                              'Open: ${DateFormat.Hm().format(gate['openTime'] as DateTime)} - '
+                              'Close: ${DateFormat.Hm().format(gate['closeTime'] as DateTime)}'),
                         )),
                   ],
                 ),
