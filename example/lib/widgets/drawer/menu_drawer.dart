@@ -33,8 +33,6 @@ import 'package:flutter_map_example/pages/tile_loading_error_handle.dart';
 import 'package:flutter_map_example/pages/wms_tile_layer.dart';
 import 'package:flutter_map_example/widgets/drawer/menu_item.dart';
 
-import '../../pages/edit_profile.dart';
-
 class MenuDrawer extends StatelessWidget {
   final String currentRoute;
 
@@ -73,11 +71,6 @@ class MenuDrawer extends StatelessWidget {
             icon: const Icon(Icons.home),
           ),
           const Divider(),
-          MenuItemWidget(
-            caption: 'Profile',
-            routeName: EditProfile.route,
-            currentRoute: currentRoute,
-          ),
           MenuItemWidget(
             caption: 'Marker Layer',
             routeName: MarkerPage.route,

@@ -1,49 +1,46 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_example/misc/tile_providers.dart';
-import 'package:flutter_map_example/plugins/my_login.dart';
-import 'package:flutter_map_example/widgets/drawer/floating_menu_button.dart';
 import 'package:flutter_map_example/widgets/drawer/menu_drawer.dart';
 import 'package:flutter_map_example/widgets/first_start_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+// Future<List<dynamic>> fetchData(String token) async {
+//   final url = Uri.parse('http://103.82.195.138:3105/api/v1/vehicle/list');
+//   final headers = {'Authorization': 'Bearer $token'};
 
-Future<List<dynamic>> fetchData(String token) async {
-  final url = Uri.parse('http://103.82.195.138:3105/api/v1/vehicle/list');
-  final headers = {'Authorization': 'Bearer $token'};
+//   final response = await http.get(url, headers: headers);
+//   if (response.statusCode == 200) {
+//     final jsonData = json.decode(response.body);
+//     final metadata = jsonData['metadata'] as List<dynamic>;
+//     return metadata;
+//   } else {
+//     return [];
+//   }
+// }
 
-  final response = await http.get(url, headers: headers);
-  if (response.statusCode == 200) {
-    final jsonData = json.decode(response.body);
-    final metadata = jsonData['metadata'] as List<dynamic>;
-    return metadata;
-  } else {
-    return [];
-  }
-}
+// Future<List<dynamic>> fetchDataPoint(String token) async {
+//   final url = Uri.parse('http://103.82.195.138:3105/api/v1/point/user');
+//   final headers = {'Authorization': 'Bearer $token'};
 
-Future<List<dynamic>> fetchDataPoint(String token) async {
-  final url = Uri.parse('http://103.82.195.138:3105/api/v1/point/user');
-  final headers = {'Authorization': 'Bearer $token'};
-
-  final response = await http.get(url, headers: headers);
-  if (response.statusCode == 200) {
-    final jsonData = json.decode(response.body);
-    final metadata = jsonData['metadata'] as List<dynamic>;
-    return metadata;
-  } else {
-    return [];
-  }
-}
+//   final response = await http.get(url, headers: headers);
+//   if (response.statusCode == 200) {
+//     final jsonData = json.decode(response.body);
+//     final metadata = jsonData['metadata'] as List<dynamic>;
+//     return metadata;
+//   } else {
+//     return [];
+//   }
+// }
 
 Future<void> showBookCarDialog(BuildContext context) async {
   final double screenWidth = MediaQuery.of(context).size.width;
@@ -269,6 +266,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  final TextEditingController _startController =
+      TextEditingController(text: 'Times Square');
+  final TextEditingController _endController =
+      TextEditingController(text: 'Central Park');
+
+  List<LatLng> _routePoints = [];
+  List<Marker> _gateMarkers = [];
+  List<Marker> _nearbyPlaceMarkers = [];
+
   static const _startedId = 'AnimatedMapController#MoveStarted';
   static const _inProgressId = 'AnimatedMapController#MoveInProgress';
   static const _finishedId = 'AnimatedMapController#MoveFinished';
@@ -283,34 +289,107 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   LatLng? _currentP = null;
   Timer? timer;
 
+  List<Map<String, dynamic>> _gates = [
+    {
+      'name': 'Gate A',
+      'openTime': DateTime(2023, 1, 1, 8, 0),
+      'closeTime': DateTime(2023, 1, 1, 20, 0),
+      'location': LatLng(40.7580, -73.9855),
+    },
+    {
+      'name': 'Gate B',
+      'openTime': DateTime(2023, 1, 1, 9, 0),
+      'closeTime': DateTime(2023, 1, 1, 21, 0),
+      'location': LatLng(40.7829, -73.9654),
+    },
+  ];
+
+  bool _mapInitialized = false;
+
   @override
   void initState() {
     super.initState();
     showIntroDialogIfNeeded();
-    _fetchData();
-    _fetchDataPoint();
-    timer = Timer.periodic(const Duration(seconds: 15), (Timer t) {
-      _fetchData();
-    });
-    getLocationUpdates().then(
-      (_) => {},
-    );
+    _searchRoute();
+    // getLocationUpdates().then(
+    //   (_) => {},
+    // );
   }
 
-  Future<void> _fetchData() async {
-    final token = MyLogin.instance.token;
-    final data = await fetchData(token);
+  void _searchRoute() {
+    if (!_mapInitialized) {
+      print('Map is not initialized yet');
+      return;
+    }
+
     setState(() {
-      _data = data;
+      _routePoints = [
+        LatLng(40.7580, -73.9855), // Times Square
+        LatLng(40.7829, -73.9654), // Central Park
+      ];
+      _gateMarkers = _gates
+          .map((gate) => Marker(
+                width: 80.0,
+                height: 80.0,
+                point: gate['location'] as LatLng,
+                child: Column(
+                  children: [
+                    Icon(Icons.location_on, color: Colors.red),
+                    Text(gate['name'] as String,
+                        style: TextStyle(fontSize: 10)),
+                    Text(
+                      'Next: ${DateFormat.Hm().format(gate['openTime'] as DateTime)}',
+                      style: TextStyle(fontSize: 8),
+                    ),
+                  ],
+                ),
+              ))
+          .toList();
+      _nearbyPlaceMarkers = [
+        Marker(
+          width: 80.0,
+          height: 80.0,
+          point: LatLng(40.7484, -73.9857),
+          child: Column(
+            children: [
+              Icon(Icons.place, color: Colors.orange),
+              Text('Empire State', style: TextStyle(fontSize: 10)),
+            ],
+          ),
+        ),
+      ];
     });
+
+    // Move the map to show the entire route
+    if (_routePoints.isNotEmpty) {
+      double minLat = _routePoints[0].latitude;
+      double maxLat = _routePoints[0].latitude;
+      double minLng = _routePoints[0].longitude;
+      double maxLng = _routePoints[0].longitude;
+
+      for (var point in _routePoints) {
+        minLat = min(minLat, point.latitude);
+        maxLat = max(maxLat, point.latitude);
+        minLng = min(minLng, point.longitude);
+        maxLng = max(maxLng, point.longitude);
+      }
+
+      final centerLat = (minLat + maxLat) / 2;
+      final centerLng = (minLng + maxLng) / 2;
+      final center = LatLng(centerLat, centerLng);
+
+      // Calculate appropriate zoom level
+      final latZoom = _getZoomLevel(maxLat - minLat);
+      final lngZoom = _getZoomLevel(maxLng - minLng);
+      final zoom = min(latZoom, lngZoom);
+
+      _animatedMapMove(center, zoom);
+    }
   }
 
-  Future<void> _fetchDataPoint() async {
-    final token = MyLogin.instance.token;
-    final dataPoint = await fetchDataPoint(token);
-    setState(() {
-      _dataPoint = dataPoint;
-    });
+  double _getZoomLevel(double delta) {
+    if (delta == 0) return 15; // Default zoom level
+    return (log(360 / delta) / ln2).floor().toDouble();
   }
 
   void _animatedMapMove(LatLng destLocation, double destZoom) {
@@ -367,43 +446,43 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     controller.forward();
   }
 
-  Future<void> getLocationUpdates() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+  // Future<void> getLocationUpdates() async {
+  //   bool _serviceEnabled;
+  //   PermissionStatus _permissionGranted;
 
-    _serviceEnabled = await _locationController.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _locationController.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
+  //   _serviceEnabled = await _locationController.serviceEnabled();
+  //   if (!_serviceEnabled) {
+  //     _serviceEnabled = await _locationController.requestService();
+  //     if (!_serviceEnabled) {
+  //       return;
+  //     }
+  //   }
 
-    _permissionGranted = await _locationController.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _locationController.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
+  //   _permissionGranted = await _locationController.hasPermission();
+  //   if (_permissionGranted == PermissionStatus.denied) {
+  //     _permissionGranted = await _locationController.requestPermission();
+  //     if (_permissionGranted != PermissionStatus.granted) {
+  //       return;
+  //     }
+  //   }
 
-    _locationSubscription = _locationController.onLocationChanged
-        .listen((LocationData currentLocation) {
-      if (!_mapCentered &&
-          currentLocation.latitude != null &&
-          currentLocation.longitude != null) {
-        _animatedMapMove(
-            LatLng(currentLocation.latitude!, currentLocation.longitude!), 15);
-        setState(() {
-          _currentP =
-              LatLng(currentLocation.latitude!, currentLocation.longitude!);
-          _mapCentered = true;
-        });
-        _locationSubscription?.cancel();
-        _locationSubscription = null;
-      }
-    });
-  }
+  //   _locationSubscription = _locationController.onLocationChanged
+  //       .listen((LocationData currentLocation) {
+  //     if (!_mapCentered &&
+  //         currentLocation.latitude != null &&
+  //         currentLocation.longitude != null) {
+  //       _animatedMapMove(
+  //           LatLng(currentLocation.latitude!, currentLocation.longitude!), 15);
+  //       setState(() {
+  //         _currentP =
+  //             LatLng(currentLocation.latitude!, currentLocation.longitude!);
+  //         _mapCentered = true;
+  //       });
+  //       _locationSubscription?.cancel();
+  //       _locationSubscription = null;
+  //     }
+  //   });
+  // }
 
   final mapController = MapController();
 
@@ -416,16 +495,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           FlutterMap(
             mapController: mapController,
             options: MapOptions(
-              // focus Nha Trang
-              initialCenter: _currentP ?? const LatLng(12.1888, 109.1467),
+              initialCenter: _currentP ?? const LatLng(40.7128, -74.0060),
               initialZoom: 14,
-              cameraConstraint: CameraConstraint.contain(
-                // focus Nha Trang
-                bounds: LatLngBounds(
-                  const LatLng(12.1888, 109.1467),
-                  const LatLng(12.2888, 109.2467),
-                ),
-              ),
+              onMapReady: () {
+                setState(() {
+                  _mapInitialized = true;
+                });
+              },
             ),
             children: [
               openStreetMapTileLayer,
@@ -451,7 +527,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 markers: [
                   if (_currentP != null)
                     Marker(
-                      point: LatLng(_currentP!.latitude, _currentP!.longitude),
+                      point: _currentP!,
                       width: 70,
                       height: 70,
                       child: Image.asset(
@@ -522,13 +598,78 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             ),
                           ));
                     }),
+                  ..._gateMarkers,
+                  ..._nearbyPlaceMarkers,
+                ],
+              ),
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: _routePoints,
+                    color: Colors.blue,
+                    strokeWidth: 4.0,
+                  ),
                 ],
               ),
             ],
           ),
-          const FloatingMenuButton()
+          Positioned(
+            top: 40,
+            left: 10,
+            right: 10,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _startController,
+                      decoration: InputDecoration(labelText: 'Start'),
+                    ),
+                    TextField(
+                      controller: _endController,
+                      decoration: InputDecoration(labelText: 'End'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _mapInitialized ? _searchRoute : null,
+                      child: Text('Search Route'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            left: 10,
+            right: 10,
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Gates:',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    ..._gates.map((gate) => ListTile(
+                          title: Text(gate['name'] as String),
+                          subtitle: Text(
+                              'Open: ${DateFormat.Hm().format(gate['openTime'] as DateTime)} - Close: ${DateFormat.Hm().format(gate['closeTime'] as DateTime)}'),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // const FloatingMenuButton()
         ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.pushNamed(context, RouteMapScreen.route);
+      //   },
+      //   child: Icon(Icons.map),
+      // ),
     );
   }
 

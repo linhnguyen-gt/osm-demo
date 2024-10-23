@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map_example/pages/begin.dart';
-import 'package:flutter_map_example/plugins/my_login.dart';
 import 'package:http/http.dart' as http;
 
 Future<dynamic> login({required String email, required String password}) async {
@@ -45,10 +44,10 @@ class _LoginState extends State<Login> {
       isLoading = true;
     });
     try {
-      final data = await login(
-          email: _emailController.text, password: _passwordController.text);
-      if (data == null) return;
-      MyLogin.instance.token = data['access_token'] as String;
+      // final data = await login(
+      //     email: _emailController.text, password: _passwordController.text);
+      // if (data == null) return;
+      // MyLogin.instance.token = data['access_token'] as String;
       Navigator.pushReplacementNamed(context, BeginPage.route);
     } finally {
       setState(() {

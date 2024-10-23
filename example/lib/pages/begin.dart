@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map_example/pages/home.dart';
 import 'package:flutter_map_example/pages/home_2.dart';
-import 'package:flutter_map_example/pages/profile_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
 class BeginPage extends StatefulWidget {
@@ -38,7 +37,7 @@ class _BeginState extends State<BeginPage> {
     final screens = [
       const Home2Page(),
       loadedPages.contains(1) ? const HomePage() : Container(),
-      loadedPages.contains(2) ? const ProfileScreen() : Container(),
+      loadedPages.contains(2) ? Container() : Container(),
     ];
 
     return Scaffold(
